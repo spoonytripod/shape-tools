@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Asset Tools</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f3f4f6;
+    color: #1f2937;
+  }
+
+  /* ========== Top Nav ========== */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .topnav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    height: 76px;
+  }
+  .brand {
+    font-size: 19px;
+    font-weight: 700;
+    color: #1f2937;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand .brand-mark {
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #4338ca, #10b981);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .brand .brand-icon { width: 36px; height: 36px; display: block; }
+  .nav-tabs {
+    display: flex;
+    gap: 6px;
+    height: 100%;
+    align-items: stretch;
+  }
+  .nav-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 20px;
+    height: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-tab:hover { color: #1f2937; }
+  .nav-tab.active {
+    color: #4338ca;
+    border-bottom-color: #4338ca;
+  }
+
+  /* ========== Tool Pages ========== */
+  .tool-page { display: none; padding: 20px 24px 24px; }
+  .tool-page.active { display: block; }
+
+  .container {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .panel {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.04);
+  }
+  h1 { margin: 0 0 6px; font-size: 20px; }
+  .subtitle { color: #6b7280; font-size: 13px; margin-bottom: 22px; }
+  h2 { font-size: 14px; margin: 22px 0 10px; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; }
+  h2:first-of-type { margin-top: 0; }
+  .control-group { margin-bottom: 14px; }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .slider-value {
+    background: #eef2ff;
+    color: #4338ca;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: #4338ca;
+  }
+  .toggle-row { display: flex; gap: 8px; }
+  .toggle-btn {
+    flex: 1;
+    padding: 8px 10px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    color: #374151;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toggle-btn.active {
+    background: #4338ca;
+    color: white;
+    border-color: #4338ca;
+  }
+  .toggle-icon { width: 20px; height: 20px; flex-shrink: 0; display: block; }
+  .item-colors { display: flex; flex-direction: column; gap: 8px; }
+  .item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px;
+    background: #f9fafb;
+    border-radius: 8px;
+  }
+  .item-row .item-name { flex: 1; font-size: 13px; color: #4b5563; }
+  input[type=color] {
+    width: 44px;
+    height: 32px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 2px;
+    cursor: pointer;
+    background: white;
+  }
+  .hex-display {
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 12px;
+    color: #6b7280;
+    width: 70px;
+  }
+  .preset-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .preset {
+    padding: 6px 10px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    color: #374151;
+    transition: all 0.15s;
+  }
+  .preset:hover { background: #e5e7eb; border-color: #d1d5db; }
+  .preset-swatches {
+    display: inline-flex;
+    gap: 2px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .preset-swatch { width: 10px; height: 10px; border-radius: 2px; }
+  .download-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background: #4338ca;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-icon { width: 16px; height: 16px; flex-shrink: 0; display: block; }
+  .download-btn:hover { background: #3730a3; }
+  .download-btn.secondary { background: #10b981; }
+  .download-btn.secondary:hover { background: #059669; }
+
+  .right-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .download-panel {
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .download-panel .download-btn {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+  .preview-title { font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .preview-controls { display: flex; align-items: center; gap: 8px; }
+  .ratio-select {
+    font-size: 12px;
+    padding: 6px 28px 6px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background-color: white;
+    color: #374151;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236b7280' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .ratio-select:focus { outline: none; border-color: #4338ca; }
+  .svg-bg {
+    --max-h: 60vh;
+    background-color: #fafafa;
+    background-image:
+      linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+      linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+      linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    border-radius: 10px;
+    padding: 28px;
+    width: min(100%, calc(var(--max-h) * var(--preview-w, 1) / var(--preview-h, 1)));
+    aspect-ratio: var(--preview-ratio, 1 / 1);
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .svg-out { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+  .svg-out svg { width: 100%; height: 100%; max-width: 100%; max-height: 100%; display: block; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15)); }
+  @media (max-width: 860px) {
+    .container { grid-template-columns: 1fr; }
+    .topnav-inner { gap: 14px; padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="topnav-inner">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <!-- 렌치(스패너): 좌상→우하, 양쪽 끝에 C자 오픈엔드 헤드 -->
+          <g transform="rotate(45 12 12)">
+            <path d="M 1.23 10.23 A 2.5 2.5 0 1 1 1.23 13.77"/>
+            <path d="M 22.77 10.23 A 2.5 2.5 0 1 0 22.77 13.77"/>
+            <rect x="5" y="10.5" width="14" height="3" rx="0.4"/>
+          </g>
+          <!-- 드라이버: 우상(그립)→좌하(평형 팁) -->
+          <g transform="rotate(-45 12 12)">
+            <rect x="14" y="8.75" width="8" height="6.5" rx="0.8"/>
+            <line x1="16.5" y1="9.45" x2="16.5" y2="14.55"/>
+            <line x1="19" y1="9.45" x2="19" y2="14.55"/>
+            <rect x="3.5" y="11.2" width="10.5" height="1.6" rx="0.2"/>
+            <path d="M 3.5 11 L 1.5 11.4 L 1.5 12.6 L 3.5 13 Z"/>
+          </g>
+        </svg>
+      </span>
+      Asset Tools
+    </div>
+    <nav class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-target="page-pyramid">3D Pyramid</button>
+      <button class="nav-tab" data-target="page-arrows">Circular Arrows</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ========================= Pyramid Page ========================= -->
+<main id="page-pyramid" class="tool-page active">
+  <div class="container">
+    <div class="panel">
+      <h1>3D Pyramid Generator</h1>
+      <div class="subtitle">Adjust layer count and colors, then export</div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Layers</span>
+          <span class="slider-value"><span id="pyr-layersValue">3</span></span>
+        </div>
+        <input type="range" id="pyr-layersSlider" min="2" max="8" value="3" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Gap</span>
+          <span class="slider-value"><span id="pyr-gapValue">8</span></span>
+        </div>
+        <input type="range" id="pyr-gapSlider" min="5" max="20" value="8" step="1">
+      </div>
+
+      <h2>Color Presets</h2>
+      <div class="preset-row" id="pyr-presets"></div>
+
+      <h2>Layer Colors (Top → Bottom)</h2>
+      <div class="item-colors" id="pyr-itemColors"></div>
+    </div>
+
+    <div class="right-stack">
+      <div class="panel download-panel">
+        <button class="download-btn secondary" id="pyr-downloadPngBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Download PNG
+        </button>
+        <button class="download-btn" id="pyr-downloadBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12,4 20,18 4,18"/>
+            <rect x="10.5" y="2.5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="18.5" y="16.5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="2.5" y="16.5" width="3" height="3" fill="currentColor" stroke="none"/>
+          </svg>
+          Download SVG
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="preview-header">
+          <span class="preview-title">Preview</span>
+          <div class="preview-controls">
+            <select class="ratio-select" id="pyr-ratioSelect"></select>
+          </div>
+        </div>
+        <div class="svg-bg" id="pyr-svgBg">
+          <div class="svg-out" id="pyr-svgContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ========================= Arrows Page ========================= -->
+<main id="page-arrows" class="tool-page">
+  <div class="container">
+    <div class="panel">
+      <h1>Circular Arrows Generator</h1>
+      <div class="subtitle">Adjust arrow count, style, and colors, then export</div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Arrows</span>
+          <span class="slider-value"><span id="arr-arrowsValue">3</span></span>
+        </div>
+        <input type="range" id="arr-arrowsSlider" min="2" max="5" value="3" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Thickness</span>
+          <span class="slider-value"><span id="arr-thicknessValue">36</span></span>
+        </div>
+        <input type="range" id="arr-thicknessSlider" min="14" max="70" value="36" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Gap</span>
+          <span class="slider-value"><span id="arr-gapValue">10</span>°</span>
+        </div>
+        <input type="range" id="arr-gapSlider" min="0" max="30" value="10" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Head Size</span>
+          <span class="slider-value"><span id="arr-headValue">20</span>%</span>
+        </div>
+        <input type="range" id="arr-headSlider" min="5" max="40" value="20" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="slider-label"><span>Direction</span></div>
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="arr-dirCw" aria-label="Clockwise" title="Clockwise">
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="21 4 21 10 15 10"/>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L21 10"/>
+            </svg>
+          </button>
+          <button class="toggle-btn" id="arr-dirCcw" aria-label="Counter-clockwise" title="Counter-clockwise">
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="3 4 3 10 9 10"/>
+              <path d="M3.51 15a9 9 0 1 0 2.12-9.36L3 10"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <h2>Color Presets</h2>
+      <div class="preset-row" id="arr-presets"></div>
+
+      <h2>Arrow Colors</h2>
+      <div class="item-colors" id="arr-itemColors"></div>
+    </div>
+
+    <div class="right-stack">
+      <div class="panel download-panel">
+        <button class="download-btn secondary" id="arr-downloadPngBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Download PNG
+        </button>
+        <button class="download-btn" id="arr-downloadBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12,4 20,18 4,18"/>
+            <rect x="10.5" y="2.5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="18.5" y="16.5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="2.5" y="16.5" width="3" height="3" fill="currentColor" stroke="none"/>
+          </svg>
+          Download SVG
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="preview-header">
+          <span class="preview-title">Preview</span>
+          <div class="preview-controls">
+            <select class="ratio-select" id="arr-ratioSelect"></select>
+          </div>
+        </div>
+        <div class="svg-bg" id="arr-svgBg">
+          <div class="svg-out" id="arr-svgContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ============================================================
+// 공통 유틸 (네임스페이스 분리 위해 IIFE 안에서도 재사용)
+// ============================================================
+function _hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  return [
+    parseInt(hex.substring(0,2), 16),
+    parseInt(hex.substring(2,4), 16),
+    parseInt(hex.substring(4,6), 16),
+  ];
+}
+function _rgbToHex(r, g, b) {
+  const h = (v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
+  return `#${h(r)}${h(g)}${h(b)}`;
+}
+function _distributePalette(palette, n, fallback) {
+  if (n <= 0) return [];
+  if (palette.length === 0) return new Array(n).fill(fallback);
+  if (palette.length === 1) return new Array(n).fill(palette[0]);
+  if (n === 1) return [palette[0]];
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    const t = (i / (n - 1)) * (palette.length - 1);
+    const idx = Math.floor(t);
+    const frac = t - idx;
+    if (idx >= palette.length - 1) {
+      result.push(palette[palette.length - 1]);
+    } else {
+      const [r1, g1, b1] = _hexToRgb(palette[idx]);
+      const [r2, g2, b2] = _hexToRgb(palette[idx + 1]);
+      result.push(_rgbToHex(
+        r1 + (r2 - r1) * frac,
+        g1 + (g2 - g1) * frac,
+        b1 + (b2 - b1) * frac,
+      ));
+    }
+  }
+  return result;
+}
+function _downloadSvgAsFile(svgString, filename) {
+  const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+// PNG: 긴 변 기준 고정 해상도로 출력
+const PNG_LONG_EDGE = 2048;
+function _downloadSvgAsPng(svgString, container, filename) {
+  const svgEl = container.querySelector('svg');
+  const w = parseFloat(svgEl.getAttribute('width'));
+  const h = parseFloat(svgEl.getAttribute('height'));
+  const longEdge = Math.max(w, h);
+  const scale = PNG_LONG_EDGE / longEdge;
+  const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(w * scale);
+    canvas.height = Math.round(h * scale);
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    URL.revokeObjectURL(svgUrl);
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    }, 'image/png');
+  };
+  img.onerror = () => {
+    URL.revokeObjectURL(svgUrl);
+    alert('Failed to render PNG.');
+  };
+  img.src = svgUrl;
+}
+
+// 비율 프리셋
+const RATIO_PRESETS = [
+  { label: 'Square 1:1',     w: 1,  h: 1  },
+  { label: 'Landscape 4:3',  w: 4,  h: 3  },
+  { label: 'Landscape 16:9', w: 16, h: 9  },
+  { label: 'Portrait 3:4',   w: 3,  h: 4  },
+  { label: 'Portrait 9:16',  w: 9,  h: 16 },
+];
+function _populateRatioSelect(selectEl) {
+  selectEl.innerHTML = '';
+  RATIO_PRESETS.forEach((r, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = r.label;
+    selectEl.appendChild(opt);
+  });
+  selectEl.value = '0';
+}
+// 아트웍 바운딩(artW, artH)과 패딩으로 비율에 맞는 캔버스 크기 계산
+function _computeCanvas(artW, artH, padding, ratio) {
+  const minW = artW + 2 * padding;
+  const minH = artH + 2 * padding;
+  const targetAR = ratio.w / ratio.h;
+  if (minW / minH > targetAR) {
+    return { canvasW: minW, canvasH: minW / targetAR };
+  }
+  return { canvasW: minH * targetAR, canvasH: minH };
+}
+
+// ============================================================
+// 탭 전환
+// ============================================================
+(function initTabs() {
+  const tabs = document.querySelectorAll('.nav-tab');
+  const pages = document.querySelectorAll('.tool-page');
+  function activate(target) {
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.target === target));
+    pages.forEach(p => p.classList.toggle('active', p.id === target));
+    if (location.hash !== '#' + target) {
+      history.replaceState(null, '', '#' + target);
+    }
+  }
+  tabs.forEach(t => t.addEventListener('click', () => activate(t.dataset.target)));
+  // 초기 해시로 탭 결정
+  const fromHash = location.hash.replace('#', '');
+  if (fromHash && document.getElementById(fromHash)) activate(fromHash);
+})();
+
+// ============================================================
+// 3D Pyramid
+// ============================================================
+(function initPyramid() {
+  const PRESETS = [
+    { name: 'Default', colors: ['#E8A33D', '#4D7CC7', '#3BAA9C'] },
+    { name: 'Ocean',   colors: ['#8ecae6', '#3a86ff', '#16537e', '#0F3460'] },
+    { name: 'Sunset',  colors: ['#ffba08', '#f48c06', '#dc2f02', '#9d0208', '#6a040f'] },
+    { name: 'Forest',  colors: ['#95d5b2', '#52b788', '#2d6a4f', '#1b4332'] },
+    { name: 'Mono',    colors: ['#dee2e6', '#adb5bd', '#6c757d', '#495057', '#212529'] },
+    { name: 'Pastel',  colors: ['#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff'] },
+  ];
+
+  let layerCount = 3;
+  let layerGap = 8;
+  let layerColors = [];
+
+  const $ = (id) => document.getElementById(id);
+  const layersSlider = $('pyr-layersSlider');
+  const layersValue  = $('pyr-layersValue');
+  const gapSlider    = $('pyr-gapSlider');
+  const gapValue     = $('pyr-gapValue');
+  const layerColorsDiv = $('pyr-itemColors');
+  const presetsDiv   = $('pyr-presets');
+  const svgContainer = $('pyr-svgContainer');
+  const svgBg       = $('pyr-svgBg');
+  const ratioSelect = $('pyr-ratioSelect');
+  const downloadBtn  = $('pyr-downloadBtn');
+  const downloadPngBtn = $('pyr-downloadPngBtn');
+
+  let ratioIdx = 0;
+  _populateRatioSelect(ratioSelect);
+  function applyRatioToBg() {
+    const r = RATIO_PRESETS[ratioIdx];
+    svgBg.style.setProperty('--preview-ratio', `${r.w} / ${r.h}`);
+    svgBg.style.setProperty('--preview-w', String(r.w));
+    svgBg.style.setProperty('--preview-h', String(r.h));
+  }
+  ratioSelect.addEventListener('change', () => {
+    ratioIdx = parseInt(ratioSelect.value, 10) || 0;
+    applyRatioToBg();
+    render();
+  });
+
+  function adjustColorArrayLength(n) {
+    if (layerColors.length < n) {
+      const fill = layerColors[layerColors.length - 1] || '#3BAA9C';
+      while (layerColors.length < n) layerColors.push(fill);
+    } else {
+      layerColors = layerColors.slice(0, n);
+    }
+  }
+
+  function hexToHsl(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const r = parseInt(hex.substring(0,2), 16) / 255;
+    const g = parseInt(hex.substring(2,4), 16) / 255;
+    const b = parseInt(hex.substring(4,6), 16) / 255;
+    const max = Math.max(r,g,b), min = Math.min(r,g,b);
+    let h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h *= 60;
+    }
+    return [h, s * 100, l * 100];
+  }
+  function hslToRgb(h, s, l) {
+    h = ((h % 360) + 360) % 360;
+    s /= 100; l /= 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const hp = h / 60;
+    const x = c * (1 - Math.abs((hp % 2) - 1));
+    let r1 = 0, g1 = 0, b1 = 0;
+    if      (hp < 1) { r1 = c; g1 = x; }
+    else if (hp < 2) { r1 = x; g1 = c; }
+    else if (hp < 3) { g1 = c; b1 = x; }
+    else if (hp < 4) { g1 = x; b1 = c; }
+    else if (hp < 5) { r1 = x; b1 = c; }
+    else             { r1 = c; b1 = x; }
+    const m = l - c / 2;
+    return [(r1 + m) * 255, (g1 + m) * 255, (b1 + m) * 255];
+  }
+  function shade(hex, lDelta) {
+    const [h, s, l] = hexToHsl(hex);
+    const newL = Math.max(0, Math.min(100, l + lDelta));
+    const [r, g, b] = hslToRgb(h, s, newL);
+    return _rgbToHex(r, g, b);
+  }
+
+  function renderColorPickers() {
+    layerColorsDiv.innerHTML = '';
+    for (let i = 0; i < layerCount; i++) {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      const name = document.createElement('span');
+      name.className = 'item-name';
+      if (i === 0) name.textContent = `Layer ${layerCount} (Top)`;
+      else if (i === layerCount - 1) name.textContent = `Layer 1 (Bottom)`;
+      else name.textContent = `Layer ${layerCount - i}`;
+      const hex = document.createElement('span');
+      hex.className = 'hex-display';
+      hex.textContent = layerColors[i].toUpperCase();
+      const input = document.createElement('input');
+      input.type = 'color';
+      input.value = layerColors[i];
+      input.addEventListener('input', e => {
+        layerColors[i] = e.target.value;
+        hex.textContent = e.target.value.toUpperCase();
+        render();
+      });
+      row.appendChild(name); row.appendChild(hex); row.appendChild(input);
+      layerColorsDiv.appendChild(row);
+    }
+  }
+
+  function renderPresets() {
+    presetsDiv.innerHTML = '';
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'preset';
+      const swatches = document.createElement('span');
+      swatches.className = 'preset-swatches';
+      p.colors.forEach(c => {
+        const sw = document.createElement('span');
+        sw.className = 'preset-swatch';
+        sw.style.background = c;
+        swatches.appendChild(sw);
+      });
+      btn.appendChild(swatches);
+      btn.appendChild(document.createTextNode(p.name));
+      btn.addEventListener('click', () => {
+        layerColors = _distributePalette(p.colors, layerCount, '#888888');
+        renderColorPickers();
+        render();
+      });
+      presetsDiv.appendChild(btn);
+    });
+  }
+
+  function buildSvg() {
+    const N = layerCount;
+    const W = 220;
+    const totalH = 260;
+    const gap = layerGap;
+    const H = Math.max(1, (totalH - gap * (N - 1)) / N);
+    const tilt = 0.42;
+    const padding = 28;
+    const shadowOffset = Math.max(3, gap * 0.8);
+
+    // 아트웍 자연 바운딩
+    const artW = 2 * W;
+    const artH = totalH + W * tilt;
+
+    const ratio = RATIO_PRESETS[ratioIdx];
+    const { canvasW, canvasH } = _computeCanvas(artW, artH, padding, ratio);
+    const cx = canvasW / 2;
+    // 아트웍을 캔버스 수직 중앙 배치 → 아트웍 하단(=groundY + W*tilt)이 canvasH/2 + artH/2
+    const groundY = canvasH / 2 + artH / 2 - W * tilt;
+
+    const fmt = (p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`;
+    const defs = [];
+    const bodyParts = [];
+
+    defs.push(`<filter id="layerShadow" x="-20%" y="-20%" width="140%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="${(gap * 0.6).toFixed(2)}"/>
+    </filter>`);
+
+    const widthAt = (yFromGround) => W * (1 - yFromGround / totalH);
+
+    for (let i = 0; i < N; i++) {
+      const yBaseFromGround = i * (H + gap);
+      const yTopFromGround  = yBaseFromGround + H;
+      const Wb = widthAt(yBaseFromGround);
+      const Wt = widthAt(yTopFromGround);
+      const yB = groundY - yBaseFromGround;
+      const yT = groundY - yTopFromGround;
+
+      const bF = [cx,       yB + Wb * tilt];
+      const bR = [cx + Wb,  yB];
+      const bL = [cx - Wb,  yB];
+      const tF = [cx,       yT + Wt * tilt];
+      const tR = [cx + Wt,  yT];
+      const tB = [cx,       yT - Wt * tilt];
+      const tL = [cx - Wt,  yT];
+
+      const base = layerColors[N - 1 - i] || '#888888';
+      const colorTop   = shade(base, 10);
+      const colorRight = shade(base, -4);
+      const colorLeft  = shade(base, -20);
+
+      let dropShadow = '';
+      if (i < N - 1) {
+        const Wu = widthAt(yTopFromGround + gap);
+        const yShadow = yT - gap;
+        const sF = [cx,        yShadow + Wu * tilt + shadowOffset];
+        const sR = [cx + Wu,   yShadow + shadowOffset];
+        const sB = [cx,        yShadow - Wu * tilt + shadowOffset];
+        const sL = [cx - Wu,   yShadow + shadowOffset];
+        dropShadow = `<polygon points="${fmt(sF)} ${fmt(sR)} ${fmt(sB)} ${fmt(sL)}" fill="#000000" fill-opacity="0.28" filter="url(#layerShadow)"/>`;
+      }
+
+      bodyParts.push(`<polygon points="${fmt(bL)} ${fmt(bF)} ${fmt(tF)} ${fmt(tL)}" fill="${colorLeft}"/>`);
+      bodyParts.push(`<polygon points="${fmt(bF)} ${fmt(bR)} ${fmt(tR)} ${fmt(tF)}" fill="${colorRight}"/>`);
+      if (Wt > 0.01) {
+        bodyParts.push(`<polygon points="${fmt(tF)} ${fmt(tR)} ${fmt(tB)} ${fmt(tL)}" fill="${colorTop}"/>`);
+      }
+      if (i < N - 1) bodyParts.push(dropShadow);
+    }
+
+    const cw = canvasW.toFixed(2);
+    const ch = canvasH.toFixed(2);
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}" viewBox="0 0 ${cw} ${ch}">
+  <defs>
+    ${defs.join('\n    ')}
+  </defs>
+  ${bodyParts.join('\n  ')}
+</svg>`;
+  }
+
+  function render() { svgContainer.innerHTML = buildSvg(); }
+
+  let _renderRaf = 0;
+  function scheduleRender() {
+    if (_renderRaf) return;
+    _renderRaf = requestAnimationFrame(() => {
+      _renderRaf = 0;
+      renderColorPickers();
+      render();
+    });
+  }
+
+  layersSlider.addEventListener('input', e => {
+    const n = parseInt(e.target.value, 10);
+    if (n === layerCount) return;
+    layerCount = n;
+    layersValue.textContent = layerCount;
+    adjustColorArrayLength(layerCount);
+    scheduleRender();
+  });
+
+  gapSlider.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (v === layerGap) return;
+    layerGap = v;
+    gapValue.textContent = layerGap;
+    scheduleRender();
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    _downloadSvgAsFile(buildSvg(), `pyramid_${layerCount}layers.svg`);
+  });
+  downloadPngBtn.addEventListener('click', () => {
+    _downloadSvgAsPng(buildSvg(), svgContainer, `pyramid_${layerCount}layers.png`);
+  });
+
+  layerColors = _distributePalette(PRESETS[0].colors, layerCount, '#888888');
+  applyRatioToBg();
+  renderColorPickers();
+  renderPresets();
+  render();
+})();
+
+// ============================================================
+// Circular Arrows
+// ============================================================
+(function initArrows() {
+  const PRESETS = [
+    { name: 'Mono',     colors: ['#1f2937'] },
+    { name: 'Spectrum', colors: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'] },
+    { name: 'Ocean',    colors: ['#0F3460', '#16537e', '#3a86ff', '#8ecae6'] },
+    { name: 'Sunset',   colors: ['#6a040f', '#dc2f02', '#f48c06', '#ffba08'] },
+    { name: 'Forest',   colors: ['#1b4332', '#2d6a4f', '#52b788', '#95d5b2'] },
+    { name: 'Pastel',   colors: ['#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff'] },
+    { name: 'Corporate',colors: ['#0F62FE', '#393939'] },
+  ];
+
+  let arrowCount = 3;
+  let thickness = 36;
+  let gapDeg = 10;
+  let headPercent = 20;
+  let direction = 'cw';
+  let arrowColors = [];
+
+  const $ = (id) => document.getElementById(id);
+  const arrowsSlider    = $('arr-arrowsSlider');
+  const arrowsValue     = $('arr-arrowsValue');
+  const thicknessSlider = $('arr-thicknessSlider');
+  const thicknessValue  = $('arr-thicknessValue');
+  const gapSlider       = $('arr-gapSlider');
+  const gapValue        = $('arr-gapValue');
+  const headSlider      = $('arr-headSlider');
+  const headValue       = $('arr-headValue');
+  const arrowColorsDiv  = $('arr-itemColors');
+  const presetsDiv      = $('arr-presets');
+  const svgContainer    = $('arr-svgContainer');
+  const svgBg           = $('arr-svgBg');
+  const ratioSelect     = $('arr-ratioSelect');
+  const downloadBtn     = $('arr-downloadBtn');
+  const downloadPngBtn  = $('arr-downloadPngBtn');
+  const dirCw           = $('arr-dirCw');
+  const dirCcw          = $('arr-dirCcw');
+
+  let ratioIdx = 0;
+  _populateRatioSelect(ratioSelect);
+  function applyRatioToBg() {
+    const r = RATIO_PRESETS[ratioIdx];
+    svgBg.style.setProperty('--preview-ratio', `${r.w} / ${r.h}`);
+    svgBg.style.setProperty('--preview-w', String(r.w));
+    svgBg.style.setProperty('--preview-h', String(r.h));
+  }
+  ratioSelect.addEventListener('change', () => {
+    ratioIdx = parseInt(ratioSelect.value, 10) || 0;
+    applyRatioToBg();
+    render();
+  });
+
+  function adjustColorArrayLength(n) {
+    if (arrowColors.length < n) {
+      const fill = arrowColors[arrowColors.length - 1] || '#1f2937';
+      while (arrowColors.length < n) arrowColors.push(fill);
+    } else {
+      arrowColors = arrowColors.slice(0, n);
+    }
+  }
+
+  function renderColorPickers() {
+    arrowColorsDiv.innerHTML = '';
+    for (let i = 0; i < arrowCount; i++) {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      const name = document.createElement('span');
+      name.className = 'item-name';
+      name.textContent = `Arrow ${i + 1}`;
+      const hex = document.createElement('span');
+      hex.className = 'hex-display';
+      hex.textContent = arrowColors[i].toUpperCase();
+      const input = document.createElement('input');
+      input.type = 'color';
+      input.value = arrowColors[i];
+      input.addEventListener('input', e => {
+        arrowColors[i] = e.target.value;
+        hex.textContent = e.target.value.toUpperCase();
+        render();
+      });
+      row.appendChild(name); row.appendChild(hex); row.appendChild(input);
+      arrowColorsDiv.appendChild(row);
+    }
+  }
+
+  function renderPresets() {
+    presetsDiv.innerHTML = '';
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'preset';
+      const swatches = document.createElement('span');
+      swatches.className = 'preset-swatches';
+      p.colors.forEach(c => {
+        const sw = document.createElement('span');
+        sw.className = 'preset-swatch';
+        sw.style.background = c;
+        swatches.appendChild(sw);
+      });
+      btn.appendChild(swatches);
+      btn.appendChild(document.createTextNode(p.name));
+      btn.addEventListener('click', () => {
+        arrowColors = _distributePalette(p.colors, arrowCount, '#1f2937');
+        renderColorPickers();
+        render();
+      });
+      presetsDiv.appendChild(btn);
+    });
+  }
+
+  function ptOnCircle(cx, cy, r, angleRad) {
+    return [cx + r * Math.sin(angleRad), cy - r * Math.cos(angleRad)];
+  }
+  function buildArrowPath(cx, cy, rIn, rOut, headExtra, startA, endA, headA, dir) {
+    const sgn = dir;
+    const aStart  = sgn > 0 ? startA : -startA;
+    const aHeadStart = sgn > 0 ? endA - headA : -(endA - headA);
+    const aTip   = sgn > 0 ? endA : -endA;
+    const midR = (rIn + rOut) / 2;
+    const headROut = rOut + headExtra;
+    const headRIn  = rIn  - headExtra;
+    const p1 = ptOnCircle(cx, cy, rOut, aStart);
+    const p2 = ptOnCircle(cx, cy, rOut, aHeadStart);
+    const p3 = ptOnCircle(cx, cy, headROut, aHeadStart);
+    const p4 = ptOnCircle(cx, cy, midR, aTip);
+    const p5 = ptOnCircle(cx, cy, headRIn, aHeadStart);
+    const p6 = ptOnCircle(cx, cy, rIn, aHeadStart);
+    const p7 = ptOnCircle(cx, cy, rIn, aStart);
+    const sweepOuter = sgn > 0 ? 1 : 0;
+    const sweepInner = sgn > 0 ? 0 : 1;
+    const largeArc = Math.abs(aHeadStart - aStart) > Math.PI ? 1 : 0;
+    const fmt = (p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`;
+    return [
+      `M ${fmt(p1)}`,
+      `A ${rOut} ${rOut} 0 ${largeArc} ${sweepOuter} ${fmt(p2)}`,
+      `L ${fmt(p3)}`,
+      `L ${fmt(p4)}`,
+      `L ${fmt(p5)}`,
+      `L ${fmt(p6)}`,
+      `A ${rIn} ${rIn} 0 ${largeArc} ${sweepInner} ${fmt(p7)}`,
+      'Z'
+    ].join(' ');
+  }
+
+  function buildSvg() {
+    const N = arrowCount;
+    const padding = 24;
+    const baseR = 180;
+    const half = thickness / 2;
+    const rIn  = baseR - half;
+    const rOut = baseR + half;
+    const headExtra = thickness * 0.55;
+    const outerMost = rOut + headExtra;
+
+    // 아트웍 자연 바운딩 (정사각형)
+    const artW = outerMost * 2;
+    const artH = outerMost * 2;
+    const ratio = RATIO_PRESETS[ratioIdx];
+    const { canvasW, canvasH } = _computeCanvas(artW, artH, padding, ratio);
+    const cx = canvasW / 2;
+    const cy = canvasH / 2;
+
+    const TAU = Math.PI * 2;
+    const segment = TAU / N;
+    const gapRad = (gapDeg * Math.PI) / 180;
+    const usable = Math.max(0.05, segment - gapRad);
+    const headRatio = Math.min(0.85, Math.max(0.15, headPercent / 100));
+    const headA = usable * headRatio;
+
+    const dir = direction === 'cw' ? 1 : -1;
+    const parts = [];
+
+    for (let i = 0; i < N; i++) {
+      const startA = i * segment + gapRad / 2;
+      const endA   = startA + usable;
+      const path = buildArrowPath(cx, cy, rIn, rOut, headExtra, startA, endA, headA, dir);
+      const color = arrowColors[i] || '#1f2937';
+      parts.push(`<path d="${path}" fill="${color}"/>`);
+    }
+
+    const cw = canvasW.toFixed(2);
+    const ch = canvasH.toFixed(2);
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}" viewBox="0 0 ${cw} ${ch}">
+  ${parts.join('\n  ')}
+</svg>`;
+  }
+
+  function render() { svgContainer.innerHTML = buildSvg(); }
+
+  let _renderRaf = 0;
+  function scheduleRender(rebuildPickers = false) {
+    if (_renderRaf) return;
+    _renderRaf = requestAnimationFrame(() => {
+      _renderRaf = 0;
+      if (rebuildPickers) renderColorPickers();
+      render();
+    });
+  }
+
+  arrowsSlider.addEventListener('input', e => {
+    const n = parseInt(e.target.value, 10);
+    if (n === arrowCount) return;
+    arrowCount = n;
+    arrowsValue.textContent = arrowCount;
+    adjustColorArrayLength(arrowCount);
+    scheduleRender(true);
+  });
+  thicknessSlider.addEventListener('input', e => {
+    thickness = parseInt(e.target.value, 10);
+    thicknessValue.textContent = thickness;
+    scheduleRender();
+  });
+  gapSlider.addEventListener('input', e => {
+    gapDeg = parseInt(e.target.value, 10);
+    gapValue.textContent = gapDeg;
+    scheduleRender();
+  });
+  headSlider.addEventListener('input', e => {
+    headPercent = parseInt(e.target.value, 10);
+    headValue.textContent = headPercent;
+    scheduleRender();
+  });
+  dirCw.addEventListener('click', () => {
+    direction = 'cw';
+    dirCw.classList.add('active');
+    dirCcw.classList.remove('active');
+    render();
+  });
+  dirCcw.addEventListener('click', () => {
+    direction = 'ccw';
+    dirCcw.classList.add('active');
+    dirCw.classList.remove('active');
+    render();
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    _downloadSvgAsFile(buildSvg(), `circular_arrows_${arrowCount}.svg`);
+  });
+  downloadPngBtn.addEventListener('click', () => {
+    _downloadSvgAsPng(buildSvg(), svgContainer, `circular_arrows_${arrowCount}.png`);
+  });
+
+  arrowColors = _distributePalette(PRESETS[1].colors, arrowCount, '#1f2937');
+  applyRatioToBg();
+  renderColorPickers();
+  renderPresets();
+  render();
+})();
+</script>
+</body>
+</html>
