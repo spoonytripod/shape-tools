@@ -303,6 +303,7 @@
     </div>
     <nav class="nav-tabs" id="navTabs">
       <button class="nav-tab active" data-target="page-pyramid">3D Pyramid</button>
+      <button class="nav-tab" data-target="page-stairs">3D Stairs</button>
       <button class="nav-tab" data-target="page-arrows">Circular Arrows</button>
     </nav>
   </div>
@@ -368,6 +369,72 @@
         </div>
         <div class="svg-bg" id="pyr-svgBg">
           <div class="svg-out" id="pyr-svgContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ========================= Stairs Page ========================= -->
+<main id="page-stairs" class="tool-page">
+  <div class="container">
+    <div class="panel">
+      <h1>3D Stairs Generator</h1>
+      <div class="subtitle">Adjust step count, height, and colors, then export</div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Steps</span>
+          <span class="slider-value"><span id="str-stepsValue">4</span></span>
+        </div>
+        <input type="range" id="str-stepsSlider" min="2" max="8" value="4" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="slider-label">
+          <span>Step Height</span>
+          <span class="slider-value"><span id="str-heightValue">56</span></span>
+        </div>
+        <input type="range" id="str-heightSlider" min="20" max="120" value="56" step="1">
+      </div>
+
+      <h2>Color Presets</h2>
+      <div class="preset-row" id="str-presets"></div>
+
+      <h2>Step Colors (Front → Back)</h2>
+      <div class="item-colors" id="str-itemColors"></div>
+    </div>
+
+    <div class="right-stack">
+      <div class="panel download-panel">
+        <button class="download-btn secondary" id="str-downloadPngBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          Download PNG
+        </button>
+        <button class="download-btn" id="str-downloadBtn">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12,4 20,18 4,18"/>
+            <rect x="10.5" y="2.5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="18.5" y="16.5" width="3" height="3" fill="currentColor" stroke="none"/>
+            <rect x="2.5" y="16.5" width="3" height="3" fill="currentColor" stroke="none"/>
+          </svg>
+          Download SVG
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="preview-header">
+          <span class="preview-title">Preview</span>
+          <div class="preview-controls">
+            <select class="ratio-select" id="str-ratioSelect"></select>
+          </div>
+        </div>
+        <div class="svg-bg" id="str-svgBg">
+          <div class="svg-out" id="str-svgContainer"></div>
         </div>
       </div>
     </div>
@@ -875,6 +942,223 @@ function _computeCanvas(artW, artH, padding, ratio) {
   });
 
   layerColors = _distributePalette(PRESETS[0].colors, layerCount, '#888888');
+  applyRatioToBg();
+  renderColorPickers();
+  renderPresets();
+  render();
+})();
+
+// ============================================================
+// 3D Stairs
+// ============================================================
+(function initStairs() {
+  const PRESETS = [
+    { name: 'Default', colors: ['#4338ca', '#6366f1', '#818cf8', '#a5b4fc'] },
+    { name: 'Ocean',   colors: ['#0F3460', '#16537e', '#3a86ff', '#8ecae6'] },
+    { name: 'Sunset',  colors: ['#6a040f', '#dc2f02', '#f48c06', '#ffba08'] },
+    { name: 'Forest',  colors: ['#1b4332', '#2d6a4f', '#52b788', '#95d5b2'] },
+    { name: 'Mono',    colors: ['#212529', '#495057', '#6c757d', '#adb5bd'] },
+    { name: 'Growth',  colors: ['#047857', '#10b981', '#34d399', '#6ee7b7'] },
+  ];
+
+  let stepCount = 4;
+  let stepHeight = 56;
+  let stepColors = [];
+
+  const $ = (id) => document.getElementById(id);
+  const stepsSlider  = $('str-stepsSlider');
+  const stepsValue   = $('str-stepsValue');
+  const heightSlider = $('str-heightSlider');
+  const heightValue  = $('str-heightValue');
+  const stepColorsDiv = $('str-itemColors');
+  const presetsDiv   = $('str-presets');
+  const svgContainer = $('str-svgContainer');
+  const svgBg        = $('str-svgBg');
+  const ratioSelect  = $('str-ratioSelect');
+  const downloadBtn  = $('str-downloadBtn');
+  const downloadPngBtn = $('str-downloadPngBtn');
+
+  let ratioIdx = 0;
+  _populateRatioSelect(ratioSelect);
+  function applyRatioToBg() {
+    const r = RATIO_PRESETS[ratioIdx];
+    svgBg.style.setProperty('--preview-ratio', `${r.w} / ${r.h}`);
+    svgBg.style.setProperty('--preview-w', String(r.w));
+    svgBg.style.setProperty('--preview-h', String(r.h));
+  }
+  ratioSelect.addEventListener('change', () => {
+    ratioIdx = parseInt(ratioSelect.value, 10) || 0;
+    applyRatioToBg();
+    render();
+  });
+
+  function adjustColorArrayLength(n) {
+    if (stepColors.length < n) {
+      const fill = stepColors[stepColors.length - 1] || '#6366f1';
+      while (stepColors.length < n) stepColors.push(fill);
+    } else {
+      stepColors = stepColors.slice(0, n);
+    }
+  }
+
+  // hex 명도 조절: pct>0 → 흰색 쪽, pct<0 → 검정 쪽으로 보간
+  function shade(hex, pct) {
+    const [r, g, b] = _hexToRgb(hex);
+    const t = pct < 0 ? 0 : 255;
+    const p = Math.abs(pct) / 100;
+    return _rgbToHex(r + (t - r) * p, g + (t - g) * p, b + (t - b) * p);
+  }
+
+  function renderColorPickers() {
+    stepColorsDiv.innerHTML = '';
+    for (let i = 0; i < stepCount; i++) {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      const name = document.createElement('span');
+      name.className = 'item-name';
+      if (i === 0) name.textContent = `Step 1 (Front)`;
+      else if (i === stepCount - 1) name.textContent = `Step ${stepCount} (Back)`;
+      else name.textContent = `Step ${i + 1}`;
+      const hex = document.createElement('span');
+      hex.className = 'hex-display';
+      hex.textContent = stepColors[i].toUpperCase();
+      const input = document.createElement('input');
+      input.type = 'color';
+      input.value = stepColors[i];
+      input.addEventListener('input', e => {
+        stepColors[i] = e.target.value;
+        hex.textContent = e.target.value.toUpperCase();
+        render();
+      });
+      row.appendChild(name); row.appendChild(hex); row.appendChild(input);
+      stepColorsDiv.appendChild(row);
+    }
+  }
+
+  function renderPresets() {
+    presetsDiv.innerHTML = '';
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'preset';
+      const swatches = document.createElement('span');
+      swatches.className = 'preset-swatches';
+      p.colors.forEach(c => {
+        const sw = document.createElement('span');
+        sw.className = 'preset-swatch';
+        sw.style.background = c;
+        swatches.appendChild(sw);
+      });
+      btn.appendChild(swatches);
+      btn.appendChild(document.createTextNode(p.name));
+      btn.addEventListener('click', () => {
+        stepColors = _distributePalette(p.colors, stepCount, '#6366f1');
+        renderColorPickers();
+        render();
+      });
+      presetsDiv.appendChild(btn);
+    });
+  }
+
+  function buildSvg() {
+    const N = stepCount;
+    const s = 64;            // 큐브 바닥 반폭 (모든 큐브 공통 = 바닥 공유)
+    const tilt = 0.5;        // 2:1 아이소메트릭 투영
+    const u = stepHeight;    // 단계당 높이 증가분
+    const padding = 28;
+    const vr = s * tilt;     // 바닥 다이아몬드 수직 반경
+
+    // 큐브를 back-right 축으로 한 칸씩 타일링, 높이는 (i+1)*u 로 증가.
+    // 임시 좌표에서 바닥 중심: (i*s, -i*vr)
+    const tallest = N * u;
+    const minX = -s;
+    const maxX = N * s;                          // 마지막 큐브 오른쪽 모서리
+    const maxY = vr;                             // 맨 앞 큐브 앞 모서리(화면 최하단)
+    const minY = -N * vr - tallest;              // 가장 높은 큐브 뒤-윗 모서리(최상단)
+    const artW = maxX - minX;
+    const artH = maxY - minY;
+
+    const ratio = RATIO_PRESETS[ratioIdx];
+    const { canvasW, canvasH } = _computeCanvas(artW, artH, padding, ratio);
+
+    // 임시 bbox 중심을 캔버스 중심에 맞추는 평행이동
+    const dx = canvasW / 2 - (minX + maxX) / 2;
+    const dy = canvasH / 2 - (minY + maxY) / 2;
+
+    const fmt = (p) => `${p[0].toFixed(2)},${p[1].toFixed(2)}`;
+    const parts = [];
+
+    // 뒤(i=N-1) → 앞(i=0) 순서로 그려 앞 큐브가 위에 오게(painter's algorithm)
+    for (let i = N - 1; i >= 0; i--) {
+      const X = i * s + dx;
+      const Y = -i * vr + dy;     // 바닥 중심
+      const h = (i + 1) * u;
+      const Yt = Y - h;           // 윗면 중심
+
+      // 바닥 다이아몬드
+      const bF = [X,       Y + vr];
+      const bR = [X + s,   Y];
+      const bL = [X - s,   Y];
+      // 윗면 다이아몬드
+      const tF = [X,       Yt + vr];
+      const tR = [X + s,   Yt];
+      const tB = [X,       Yt - vr];
+      const tL = [X - s,   Yt];
+
+      const base = stepColors[i] || '#6366f1';
+      const colorTop   = shade(base, 14);
+      const colorRight = shade(base, -8);
+      const colorLeft  = shade(base, -24);
+
+      // 좌측면 → 우측면 → 윗면 순서로 push
+      parts.push(`<polygon points="${fmt(bL)} ${fmt(bF)} ${fmt(tF)} ${fmt(tL)}" fill="${colorLeft}"/>`);
+      parts.push(`<polygon points="${fmt(bF)} ${fmt(bR)} ${fmt(tR)} ${fmt(tF)}" fill="${colorRight}"/>`);
+      parts.push(`<polygon points="${fmt(tF)} ${fmt(tR)} ${fmt(tB)} ${fmt(tL)}" fill="${colorTop}"/>`);
+    }
+
+    const cw = canvasW.toFixed(2);
+    const ch = canvasH.toFixed(2);
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}" viewBox="0 0 ${cw} ${ch}">
+  ${parts.join('\n  ')}
+</svg>`;
+  }
+
+  function render() { svgContainer.innerHTML = buildSvg(); }
+
+  let _renderRaf = 0;
+  function scheduleRender() {
+    if (_renderRaf) return;
+    _renderRaf = requestAnimationFrame(() => {
+      _renderRaf = 0;
+      renderColorPickers();
+      render();
+    });
+  }
+
+  stepsSlider.addEventListener('input', e => {
+    const n = parseInt(e.target.value, 10);
+    if (n === stepCount) return;
+    stepCount = n;
+    stepsValue.textContent = stepCount;
+    adjustColorArrayLength(stepCount);
+    scheduleRender();
+  });
+
+  heightSlider.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (v === stepHeight) return;
+    stepHeight = v;
+    heightValue.textContent = stepHeight;
+    render();
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    _downloadSvgAsFile(buildSvg(), `stairs_${stepCount}steps.svg`);
+  });
+  downloadPngBtn.addEventListener('click', () => {
+    _downloadSvgAsPng(buildSvg(), svgContainer, `stairs_${stepCount}steps.png`);
+  });
+
+  stepColors = _distributePalette(PRESETS[0].colors, stepCount, '#6366f1');
   applyRatioToBg();
   renderColorPickers();
   renderPresets();
