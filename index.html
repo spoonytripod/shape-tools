@@ -386,7 +386,7 @@
           <span>Arrows</span>
           <span class="slider-value"><span id="arr-arrowsValue">3</span></span>
         </div>
-        <input type="range" id="arr-arrowsSlider" min="2" max="5" value="3" step="1">
+        <input type="range" id="arr-arrowsSlider" min="1" max="5" value="3" step="1">
       </div>
 
       <div class="control-group">
@@ -394,7 +394,7 @@
           <span>Thickness</span>
           <span class="slider-value"><span id="arr-thicknessValue">36</span></span>
         </div>
-        <input type="range" id="arr-thicknessSlider" min="14" max="70" value="36" step="1">
+        <input type="range" id="arr-thicknessSlider" min="14" max="140" value="36" step="1">
       </div>
 
       <div class="control-group">
@@ -410,7 +410,7 @@
           <span>Head Size</span>
           <span class="slider-value"><span id="arr-headValue">20</span>%</span>
         </div>
-        <input type="range" id="arr-headSlider" min="5" max="40" value="20" step="1">
+        <input type="range" id="arr-headSlider" min="1" max="40" value="20" step="1">
       </div>
 
       <div class="control-group">
@@ -1048,7 +1048,7 @@ function _computeCanvas(artW, artH, padding, ratio) {
     const segment = TAU / N;
     const gapRad = (gapDeg * Math.PI) / 180;
     const usable = Math.max(0.05, segment - gapRad);
-    const headRatio = Math.min(0.85, Math.max(0.15, headPercent / 100));
+    const headRatio = headPercent / 100;
     const headA = usable * headRatio;
 
     const dir = direction === 'cw' ? 1 : -1;
