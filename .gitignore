@@ -24,3 +24,9 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 next-env.d.ts
+
+# Local planning and agent guidance
+/AGENTS.md
+/CLAUDE.md
+/docs/
+/legacy/

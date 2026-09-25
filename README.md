@@ -38,9 +38,7 @@ npm run build          # production build
 npm run test:e2e       # browser flows; run npx playwright install chromium first
 ```
 
-The app uses Next.js App Router, TypeScript, shadcn/ui, and browser-side SVG/PNG generation. `src/app/` contains routes and styles, `src/components/` contains UI, and `src/lib/` contains shared and tool-specific generation code. `tests/` contains regression and browser tests. The original `index.html` remains at the root as a local reference; `legacy/` holds earlier standalone tools.
-
-See [project documentation](docs/README.md) for goals, migration status, conventions, and decisions. [AGENTS.md](AGENTS.md) is the contributor guide.
+The app uses Next.js App Router, TypeScript, shadcn/ui, and browser-side SVG/PNG generation. `src/app/` contains routes and styles, `src/components/` contains UI, and `src/lib/` contains shared and tool-specific generation code. `tests/` contains regression and browser tests. The original `index.html` remains at the root as a standalone reference.
 
 ## License
 
