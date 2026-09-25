@@ -2,7 +2,7 @@
 
 Create customizable diagrams for presentations and documents, then download transparent SVG or PNG files.
 
-The Next.js app is available locally; public deployment to Vercel is planned. Root `index.html` remains the original standalone demo.
+Use the live app at [shape-tools.vercel.app](https://shape-tools.vercel.app/).
 
 ## Tools
 
@@ -39,6 +39,10 @@ npm run test:e2e       # browser flows; run npx playwright install chromium firs
 ```
 
 The app uses Next.js App Router, TypeScript, shadcn/ui, and browser-side SVG/PNG generation. `src/app/` contains routes and styles, `src/components/` contains UI, and `src/lib/` contains shared and tool-specific generation code. `tests/` contains regression and browser tests. The original `index.html` remains at the root as a standalone reference.
+
+## Deployment
+
+The Vercel project imports `spoonytripod/shape-tools` from GitHub. Pushes to `main` update the production site at `shape-tools.vercel.app`; other branches can be used for preview deployments. No environment variables or custom build settings are required.
 
 ## License
 
