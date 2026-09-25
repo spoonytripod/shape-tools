@@ -1,75 +1,40 @@
 # Asset Tools
 
-> Parametric SVG/PNG asset generator — clean 3D pyramids and circular arrow diagrams for slides, docs, and presentations.
+Create customizable diagrams for presentations and documents, then download transparent SVG or PNG files.
 
-🔗 **Live demo:** https://spoonytripod.github.io/asset-tools/
-
-## What it does
-
-Asset Tools is a single-page web app that generates customizable graphics directly in the browser. No installation, no signup, no cloud roundtrip — just open the page, tweak the controls, and download an SVG or PNG with a transparent background.
+The new Next.js app is available locally. The [GitHub Pages demo](https://spoonytripod.github.io/asset-tools/) still serves the original single-file version while deployment moves to Vercel.
 
 ## Tools
 
-### 3D Pyramid Generator
-- Stacked frustum pyramid rendered in faux-3D
-- 2–8 layers, adjustable inter-layer gap
-- Per-layer color picker plus curated palette presets
-- Soft inter-layer shadows for depth
+- **3D Pyramid:** 2–8 layers, adjustable gaps, color pickers, and palette presets.
+- **3D Stairs:** 2–8 steps, adjustable height, individual colors, and presets.
+- **Circular Arrows:** 1–5 arrows, thickness, gap, head size, direction, and colors.
 
-### 3D Stairs Generator
-- 2–8 steps with adjustable step height
-- Per-step color picker plus palette presets
+Each tool supports five aspect ratios. SVG and PNG exports have transparent backgrounds; PNG uses a 2048 px long edge. Generated SVG colors use hex values for broad presentation-software compatibility.
 
-### Circular Arrows Generator
-- 1–5 arrows arranged radially
-- Adjustable thickness, gap angle, head size
-- Clockwise / counter-clockwise direction toggle
-- Per-arrow color picker plus palette presets
+## Development
 
-## Common features
-
-- **Aspect ratio presets** — 1:1, 4:3, 16:9, 3:4, 9:16. The preview panel and the exported file both follow the chosen ratio.
-- **Transparent background** for both SVG and PNG output.
-- **PNG export** at a fixed 2048 px long edge for consistent quality across ratios.
-- **PowerPoint-friendly SVG** — hex colors only, no `hsl()` / `rgba()` that some renderers fail on.
-- **Smart palette distribution** — preset palettes are interpolated across the active item count without forcing a layer/arrow count change.
-
-## Usage
-
-Open the live demo, or run locally:
+Requires Node.js compatible with the installed Next.js version and npm. From the repository root:
 
 ```bash
-git clone https://github.com/spoonytripod/asset-tools.git
-cd asset-tools
-# open index.html directly in a browser, or serve with any static server
+npm ci
+npm run dev
 ```
 
-## Tech stack
+Open `http://localhost:3000`. The landing page lists the tools at `/tools/pyramid`, `/tools/stairs`, and `/tools/circular-arrows`. Old `/#page-*` links are recognized on the new app.
 
-- Vanilla HTML / CSS / JavaScript — no frameworks, no build step
-- CSS `aspect-ratio`, `min()`, and custom properties for the responsive preview
-- Inline SVG generation for both preview rendering and export
-
-## Browser support
-
-Latest Chrome, Firefox, Safari, Edge. Requires CSS `aspect-ratio` and `min()` (i.e. browsers from 2021+).
-
-## Repository layout
-
-```
-.
-├── index.html       # main app
-├── legacy/          # original standalone tool versions, kept for reference
-└── .gitignore
+```bash
+npm run typecheck      # TypeScript diagnostics
+npm run lint           # ESLint
+npm run format:check   # Prettier verification
+npm test               # SVG regression tests
+npm run build          # production build
+npm run test:e2e       # browser flows; run npx playwright install chromium first
 ```
 
-## Project documentation
+The app uses Next.js App Router, TypeScript, shadcn/ui, and browser-side SVG/PNG generation. `src/app/` contains routes and styles, `src/components/` contains UI, and `src/lib/` contains shared and tool-specific generation code. `tests/` contains regression and browser tests. The original `index.html` remains at the root for the current GitHub Pages demo; `legacy/` holds earlier standalone tools.
 
-Asset Tools began as a way to create shapes for presentations and documents. The next phase will use Next.js, TypeScript, and shadcn/ui to add practical shapes and publish the site on Vercel.
-
-The tech stack and GitHub Pages link above describe the current implementation. The Next.js migration and Vercel deployment are planned, not implemented.
-
-See [the documentation index](docs/README.md) for goals, the migration plan, conventions, and decision records. Contributor guidance is in [AGENTS.md](AGENTS.md).
+See [project documentation](docs/README.md) for goals, migration status, conventions, and decisions. [AGENTS.md](AGENTS.md) is the contributor guide.
 
 ## License
 

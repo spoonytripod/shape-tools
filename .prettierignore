@@ -1,0 +1,7 @@
+.next
+node_modules
+coverage
+playwright-report
+test-results
+tests/fixtures/legacy-svg.json
+scripts/capture-legacy-baseline.mjs

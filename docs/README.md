@@ -8,14 +8,16 @@
 2. [전환 계획](migration-plan.md): 현재 상태, 목표 구조, 단계별 완료 조건.
 3. [개발·문서 규약](conventions.md): 구현, 검증, 문서 관리 방법.
 4. [결정 기록](decisions/0001-project-direction.md): 최초 방향, [기술·배포 선택](decisions/0002-next-shadcn-vercel.md), [npm 선택](decisions/0003-package-manager.md), [품질 도구 선택](decisions/0004-quality-tooling.md), [URL 구조](decisions/0005-url-structure.md).
+5. [전환 전 출력 기준](legacy-baseline.md): 기존 SVG와 새 생성기의 비교 방법.
 
 ## 현재 진행 상태
 
 - 완료: 프로젝트 방향, Next.js·shadcn/ui·Vercel, npm, 품질 도구, URL 구조 선택 문서화.
-- 미착수: Next.js 프로젝트 구성, 기존 도형 전환, 테스트 환경 구성.
-- 이후: 실용 도형 확장, 공개 웹사이트 사용성과 배포 개선.
+- 완료: Next.js 프로젝트 구성, 기존 세 도형 전환, SVG 회귀 및 브라우저 흐름 검증.
+- 미착수: Vercel 프로젝트·도메인 결정과 공개 배포.
+- 이후: 실용 도형 확장과 공개 웹사이트 사용성 개선.
 
-현재 실행 방법은 루트 [README.md](../README.md)를 따른다. 계획에 적힌 경로와 명령은 실제 구현되기 전까지 사용할 수 있다고 간주하지 않는다.
+새 앱의 로컬 실행 방법은 루트 [README.md](../README.md)를 따른다. GitHub Pages 데모는 배포 전까지 기존 `index.html`을 제공한다.
 
 ## 문서별 책임
 

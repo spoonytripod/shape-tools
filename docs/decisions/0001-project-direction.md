@@ -24,7 +24,7 @@ TypeScript를 브라우저용 JavaScript로 변환하는 개발·빌드 절차�
 
 ## 미결정 사항
 
-Next.js·shadcn/ui·Vercel은 [0002](0002-next-shadcn-vercel.md)에서 결정했다. 패키지 관리자는 [0003](0003-package-manager.md)에서 npm으로 정했다. 테스트·린트·포맷 도구는 [0004](0004-quality-tooling.md)에서 정했다. 정확한 버전, Vercel 프로젝트 설정, 첫 신규 도형은 아직 정하지 않았다. 구현 시 요구사항과 도입 비용을 비교하고 후속 결정 기록에 남긴다.
+Next.js·shadcn/ui·Vercel은 [0002](0002-next-shadcn-vercel.md)에서 결정했다. 패키지 관리자는 [0003](0003-package-manager.md)에서 npm으로, 테스트·린트·포맷 도구는 [0004](0004-quality-tooling.md)에서 정했다. 설치된 버전은 `package-lock.json`에 기록된다. Vercel 프로젝트 설정과 첫 신규 도형은 아직 정하지 않았다.
 
 ## 검증
 
