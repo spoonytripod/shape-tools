@@ -4,7 +4,7 @@
 
 ## 현재와 목표
 
-기존 `index.html`에 스타일, 마크업, JavaScript가 함께 있으며 현재 GitHub Pages 데모가 이를 제공한다. 새 Next.js 앱은 `src/`에 있고 npm 스크립트로 실행·검증한다. `legacy/`는 참고 자료다.
+기존 `index.html`에는 스타일, 마크업, JavaScript가 함께 있으며 로컬 참조용으로 보관한다. 새 Next.js 앱은 `src/`에 있고 npm 스크립트로 실행·검증한다. `legacy/`는 참고 자료다.
 
 목표는 Next.js App Router와 TypeScript로 화면·상태·기하 계산을 구성하고, shadcn/ui를 공통 UI 컴포넌트에 적용하는 것이다. 도형 생성과 SVG/PNG 다운로드는 브라우저에서 실행한다. Vercel을 목표 배포처로 삼는다. 선택 근거는 [후속 결정 기록](decisions/0002-next-shadcn-vercel.md)에 있다.
 
@@ -62,7 +62,7 @@ legacy/                   # 이전 구현 참고용
 
 ### 4. 공개 배포 준비 — 미착수
 
-- 전환한 앱의 동작을 검증한 뒤 Vercel 프로젝트·도메인 설정을 결정한다. Git 저장소를 연결하고 Preview·Production 배포 흐름을 구성한다. 기존 GitHub Pages 데모의 안내와 전환 시점을 정리한다.
+- 전환한 앱의 동작을 검증한 뒤 Vercel 프로젝트·도메인 설정을 결정한다. Git 저장소를 연결하고 Preview·Production 배포 흐름을 구성한다. 공개 URL이 확정되면 README와 안내 문서를 갱신한다.
 - 직접 링크·새로고침, 모바일 화면, 키보드 조작, 다운로드 실패 안내를 점검한다.
 - SVG/PNG 출력물의 크기, 투명도, 시각적 품질을 확인한다. 이전 배포 버전으로 복구하는 절차도 기록한다.
 - 완료 조건: Vercel의 공개 URL에서 생성·내보내기를 검증하고 지원 범위와 알려진 제한을 문서화한다.

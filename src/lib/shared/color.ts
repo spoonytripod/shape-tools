@@ -51,6 +51,13 @@ export const COLOR_PRESETS = {
 
 export const SHARED_PRESETS: readonly Preset[] = Object.values(COLOR_PRESETS);
 
+export function applyColorOrder(
+  colors: readonly string[],
+  reversed: boolean,
+): string[] {
+  return reversed ? [...colors].reverse() : [...colors];
+}
+
 export function hexToRgb(hex: string): [number, number, number] {
   const value = hex.replace('#', '');
   const expanded =

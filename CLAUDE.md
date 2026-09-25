@@ -7,7 +7,7 @@ This file gives Claude Code project-specific guidance. Read [AGENTS.md](AGENTS.m
 - The new app uses Next.js App Router, React, TypeScript, and shadcn/ui. Run `npm ci`, then `npm run dev` to develop locally. See README for validation commands.
 - Routes are `/` (tool list), `/tools/pyramid`, `/tools/stairs`, and `/tools/circular-arrows`. The home page recognizes the old `#page-*` fragments.
 - `src/lib/tools/*/model.ts` holds pure SVG generators. `src/components/tools/tool-editor.tsx` connects controls, preview, and downloads. Shared color, canvas, and download code lives in `src/lib/shared/`.
-- The root `index.html` is the original app still served by the current GitHub Pages demo. Do not edit it as the source of the new Next.js app. The older standalone generators in `legacy/` are reference material.
+- The root `index.html` is the original standalone app, kept as a local reference. Do not edit it as the source of the new Next.js app. The older generators in `legacy/` are reference material.
 
 ## SVG constraints
 

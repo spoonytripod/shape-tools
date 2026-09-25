@@ -14,12 +14,14 @@ import {
   RotateCw,
   RotateCcw,
   LoaderCircle,
+  ArrowDownUp,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { RATIO_PRESETS } from '@/lib/shared/canvas';
 import {
   COLOR_PRESETS,
+  applyColorOrder,
   distributePalette,
   SHARED_PRESETS,
   type Preset,
@@ -87,12 +89,14 @@ function PresetControls({
   count,
   fallback,
   colors,
+  reversed,
   onSelect,
 }: {
   presets: readonly Preset[];
   count: number;
   fallback: string;
   colors: readonly string[];
+  reversed: boolean;
   onSelect: (preset: Preset) => void;
 }) {
   return (
@@ -104,7 +108,10 @@ function PresetControls({
           variant="outline"
           size="sm"
           className="preset"
-          aria-pressed={distributePalette(preset.colors, count, fallback).every(
+          aria-pressed={applyColorOrder(
+            distributePalette(preset.colors, count, fallback),
+            reversed,
+          ).every(
             (color, index) =>
               color.toLowerCase() === colors[index]?.toLowerCase(),
           )}
@@ -171,6 +178,13 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
     stairs: COLOR_PRESETS.Indigo.colors,
     'circular-arrows': COLOR_PRESETS.Spectrum.colors,
   });
+  const [reversedColors, setReversedColors] = useState<Record<ToolId, boolean>>(
+    {
+      pyramid: false,
+      stairs: false,
+      'circular-arrows': false,
+    },
+  );
   const [error, setError] = useState('');
   const [exporting, setExporting] = useState(false);
   const [background, setBackground] = useState('transparent');
@@ -219,7 +233,7 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
       colors.map((item, i) => (i === index ? color : item));
     setPaletteSources((current) => ({
       ...current,
-      [tool]: update(state.colors),
+      [tool]: applyColorOrder(update(state.colors), reversedColors[tool]),
     }));
     if (tool === 'pyramid')
       setPyramid((current) => ({ ...current, colors: update(current.colors) }));
@@ -229,16 +243,33 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
       setArrows((current) => ({ ...current, colors: update(current.colors) }));
   };
   const setColors = (preset: Preset) => {
-    const colors = distributePalette(
-      preset.colors,
-      state.colors.length,
-      fallback,
+    const colors = applyColorOrder(
+      distributePalette(preset.colors, state.colors.length, fallback),
+      reversedColors[tool],
     );
     setPaletteSources((current) => ({ ...current, [tool]: preset.colors }));
     if (tool === 'pyramid') setPyramid((current) => ({ ...current, colors }));
     else if (tool === 'stairs')
       setStairs((current) => ({ ...current, colors }));
     else setArrows((current) => ({ ...current, colors }));
+  };
+  const toggleColorOrder = () => {
+    setReversedColors((current) => ({ ...current, [tool]: !current[tool] }));
+    if (tool === 'pyramid')
+      setPyramid((current) => ({
+        ...current,
+        colors: [...current.colors].reverse(),
+      }));
+    else if (tool === 'stairs')
+      setStairs((current) => ({
+        ...current,
+        colors: [...current.colors].reverse(),
+      }));
+    else
+      setArrows((current) => ({
+        ...current,
+        colors: [...current.colors].reverse(),
+      }));
   };
   const fallback =
     tool === 'pyramid' ? '#888888' : tool === 'stairs' ? '#6366f1' : '#1f2937';
@@ -291,10 +322,13 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
                     setPyramid((current) => ({
                       ...current,
                       layerCount,
-                      colors: distributePalette(
-                        paletteSources.pyramid,
-                        layerCount,
-                        '#3BAA9C',
+                      colors: applyColorOrder(
+                        distributePalette(
+                          paletteSources.pyramid,
+                          layerCount,
+                          '#3BAA9C',
+                        ),
+                        reversedColors.pyramid,
                       ),
                     }))
                   }
@@ -323,10 +357,13 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
                     setStairs((current) => ({
                       ...current,
                       stepCount,
-                      colors: distributePalette(
-                        paletteSources.stairs,
-                        stepCount,
-                        '#6366f1',
+                      colors: applyColorOrder(
+                        distributePalette(
+                          paletteSources.stairs,
+                          stepCount,
+                          '#6366f1',
+                        ),
+                        reversedColors.stairs,
                       ),
                     }))
                   }
@@ -355,10 +392,13 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
                     setArrows((current) => ({
                       ...current,
                       arrowCount,
-                      colors: distributePalette(
-                        paletteSources['circular-arrows'],
-                        arrowCount,
-                        '#1f2937',
+                      colors: applyColorOrder(
+                        distributePalette(
+                          paletteSources['circular-arrows'],
+                          arrowCount,
+                          '#1f2937',
+                        ),
+                        reversedColors['circular-arrows'],
                       ),
                     }))
                   }
@@ -451,15 +491,30 @@ export function ToolEditor({ tool }: { tool: ToolId }) {
               count={colors.length}
               fallback={fallback}
               colors={colors}
+              reversed={reversedColors[tool]}
               onSelect={setColors}
             />
-            <h3 className="color-heading">
-              {tool === 'pyramid'
-                ? 'Layer Colors (Top → Bottom)'
-                : tool === 'stairs'
-                  ? 'Step Colors (Front → Back)'
-                  : 'Arrow Colors'}
-            </h3>
+            <div className="color-heading-row">
+              <h3 className="color-heading">
+                {tool === 'pyramid'
+                  ? 'Layer Colors'
+                  : tool === 'stairs'
+                    ? 'Step Colors'
+                    : 'Arrow Colors'}
+              </h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="color-order-button"
+                aria-label="Reverse color order"
+                aria-pressed={reversedColors[tool]}
+                onClick={toggleColorOrder}
+              >
+                <ArrowDownUp size={13} aria-hidden="true" />
+                {reversedColors[tool] ? 'Reversed' : 'Normal'}
+              </Button>
+            </div>
             <ColorControls
               colors={colors}
               labelAt={(index) => {

@@ -39,6 +39,9 @@
   --border: #dce5e6;
   --radius: 10px;
 }
+html {
+  scrollbar-gutter: stable;
+}
 * {
   box-sizing: border-box;
 }
@@ -392,11 +395,30 @@ input[type='range']::-moz-range-thumb {
 .preset-swatch {
   flex: 1;
 }
+.color-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 20px 0 6px;
+}
 .color-heading {
   font-size: 11px;
   color: var(--muted-foreground);
   font-weight: 500;
-  margin: 24px 0 8px;
+}
+.color-order-button {
+  height: 28px;
+  gap: 5px;
+  padding: 0 8px;
+  border-radius: 7px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+}
+.color-order-button[aria-pressed='true'] {
+  border-color: var(--primary);
+  background: var(--secondary);
+  color: var(--primary);
 }
 .item-row {
   display: flex;

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
 export const metadata: Metadata = {
-  title: 'Asset Tools',
+  title: 'Shape Tools',
   description: 'Create diagrams and shapes for presentations and documents.',
 };
 

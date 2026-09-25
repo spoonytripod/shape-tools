@@ -4,7 +4,7 @@
 
 - `src/app/` contains the Next.js App Router pages and global CSS. `/` lists the tools; `/tools/pyramid`, `/tools/stairs`, and `/tools/circular-arrows` host the generators.
 - `src/components/tools/tool-editor.tsx` handles controls and previews. `src/components/ui/` contains shadcn/ui components. Pure SVG generators live in `src/lib/tools/`; shared color, ratio, and download helpers live in `src/lib/shared/`.
-- `tests/` contains SVG regression fixtures and browser tests. `docs/` holds goals, migration status, conventions, and decisions. Root `index.html` still serves the old GitHub Pages demo; `legacy/` is reference material.
+- `tests/` contains SVG regression fixtures and browser tests. `docs/` holds goals, migration status, conventions, and decisions. Root `index.html` remains the old standalone demo; `legacy/` is reference material.
 
 ## Build, Test, and Development Commands
 

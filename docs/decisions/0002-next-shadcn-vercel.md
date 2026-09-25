@@ -13,7 +13,7 @@
 
 - Next.js App Router와 React·TypeScript를 새 앱의 기반으로 사용한다.
 - shadcn/ui를 공통 컨트롤과 레이아웃에 필요한 만큼 적용한다. 도형 기하·SVG 생성은 별도 TypeScript 모듈로 둔다.
-- Vercel을 목표 배포처로 사용한다. 현재 GitHub Pages 주소는 새 사이트 배포 전까지 현행 데모로 표시한다.
+- Vercel을 목표 배포처로 사용한다. 기존 단일 HTML 앱은 로컬 참조용으로 보관한다.
 - SVG/PNG 생성과 다운로드는 브라우저에서 처리한다. 서버 기능은 현재 요구사항에 포함하지 않는다.
 
 ## 구현 영향

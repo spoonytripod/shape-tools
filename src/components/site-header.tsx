@@ -31,7 +31,7 @@ export function SiteHeader() {
           <span className="brand-mark" aria-hidden="true">
             <Layers3 size={21} strokeWidth={1.7} />
           </span>
-          Asset Tools
+          Shape Tools
         </Link>
         <nav className="nav-tabs" aria-label="Tools">
           {links.map((link) => (

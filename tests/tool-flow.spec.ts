@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import {
   COLOR_PRESETS,
+  applyColorOrder,
   distributePalette,
   SHARED_PRESETS,
 } from '../src/lib/shared/color';
@@ -338,8 +339,75 @@ test('all three tools offer the same nine palettes and apply their colors', asyn
   }
 });
 
+test('reversing color order updates every tool and survives palette and count changes', async ({
+  page,
+}) => {
+  for (const tool of cases) {
+    await page.goto(tool.route);
+    const colorInputs = page.locator('.item-colors input[type="color"]');
+    const displayedColors = () =>
+      colorInputs.evaluateAll((inputs) =>
+        inputs.map((input) => (input as HTMLInputElement).value.toLowerCase()),
+      );
+    const preview = page.getByRole('img', { name: `${tool.title} preview` });
+    const orderButton = page.getByRole('button', {
+      name: 'Reverse color order',
+    });
+    const initialColors = await displayedColors();
+    const initialSvg = await preview.innerHTML();
+
+    await expect(orderButton).toHaveAttribute('aria-pressed', 'false');
+    await expect(orderButton).toHaveText(/Normal/);
+    await orderButton.click();
+    await expect(orderButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(orderButton).toHaveText(/Reversed/);
+    expect(await displayedColors()).toEqual([...initialColors].reverse());
+    await expect(preview).not.toHaveJSProperty('innerHTML', initialSvg);
+
+    await page.getByRole('button', { name: 'Ocean', exact: true }).click();
+    const slider = page.locator(`#${tool.slider}`);
+    await slider.focus();
+    await slider.press('End');
+    const oceanColors = applyColorOrder(
+      distributePalette(
+        COLOR_PRESETS.Ocean.colors,
+        Number(tool.max),
+        '#1f2937',
+      ),
+      true,
+    ).map((color) => color.toLowerCase());
+    expect(await displayedColors()).toEqual(oceanColors);
+    await expect(page.getByRole('button', { name: 'Ocean' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+
+    await colorInputs.first().fill('#123456');
+    const editedColors = ['#123456', ...oceanColors.slice(1)];
+    await slider.press('Home');
+    await slider.press('End');
+    expect(await displayedColors()).toEqual(
+      applyColorOrder(
+        distributePalette(
+          [...editedColors].reverse(),
+          Number(tool.max),
+          '#1f2937',
+        ),
+        true,
+      ).map((color) => color.toLowerCase()),
+    );
+
+    const reversedColors = await displayedColors();
+    await orderButton.click();
+    await expect(orderButton).toHaveAttribute('aria-pressed', 'false');
+    expect(await displayedColors()).toEqual([...reversedColors].reverse());
+  }
+});
+
 test('tool cards and old hash links reach the new routes', async ({ page }) => {
   await page.goto('/');
+  await expect(page).toHaveTitle('Shape Tools');
+  await expect(page.getByRole('link', { name: 'Shape Tools' })).toBeVisible();
   await page
     .getByRole('link', { name: /3D Pyramid/ })
     .last()
