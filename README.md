@@ -12,6 +12,12 @@ The new Next.js app is available locally. The [GitHub Pages demo](https://spoony
 
 Each tool supports five aspect ratios. SVG and PNG exports have transparent backgrounds; PNG uses a 2048 px long edge. Generated SVG colors use hex values for broad presentation-software compatibility.
 
+On desktop, shape controls, the live preview and download buttons, and color controls sit side by side so the export actions stay in the first screen. Switch the preview between transparent, white, black, and a custom color (picker or HEX value) to check contrast; this does not change exported files. On mobile, the preview and download actions appear before the controls.
+
+Changing the number of layers, steps, or arrows automatically redistributes the selected color palette. Individual color edits also remain the source for later count changes.
+
+All three tools share nine color presets: Default, Mono, Ocean, Sunset, Forest, Pastel, Spectrum, Indigo, and Corporate. Each tool opens with its familiar colors (Default for Pyramid, Indigo for Stairs, Spectrum for Circular Arrows).
+
 ## Development
 
 Requires Node.js compatible with the installed Next.js version and npm. From the repository root:

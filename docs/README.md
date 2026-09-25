@@ -21,4 +21,6 @@
 
 ## 문서별 책임
 
+[화면 디자인 규약](design-system.md)은 색상, 배치, 미리보기 상호작용과 변경 전후 화면을 관리한다.
+
 목표는 `project-goals.md`, 작업 순서는 `migration-plan.md`, 공통 규약은 `conventions.md`를 기준으로 삼는다. 중요한 기술 선택은 `decisions/`에 기록한다. 같은 설명을 복사하기보다 기준 문서에 상대 링크를 건다.

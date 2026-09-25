@@ -4,7 +4,7 @@ import { SiteHeader } from '@/components/site-header';
 import { Geist } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
 export const metadata: Metadata = {
   title: 'Asset Tools',

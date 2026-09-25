@@ -1,5 +1,56 @@
 export type Preset = { name: string; colors: readonly string[] };
 
+// One ordered palette catalog for every shape tool. The color order is significant:
+// the first color maps to the first layer, step, or arrow.
+export const COLOR_PRESETS = {
+  Default: {
+    name: 'Default',
+    colors: ['#E8A33D', '#4D7CC7', '#3BAA9C'],
+  },
+  Mono: {
+    name: 'Mono',
+    colors: ['#212529', '#495057', '#6c757d', '#adb5bd'],
+  },
+  Ocean: {
+    name: 'Ocean',
+    colors: ['#0F3460', '#16537e', '#3a86ff', '#8ecae6'],
+  },
+  Sunset: {
+    name: 'Sunset',
+    colors: ['#6a040f', '#dc2f02', '#f48c06', '#ffba08'],
+  },
+  Forest: {
+    name: 'Forest',
+    colors: ['#1b4332', '#2d6a4f', '#52b788', '#95d5b2'],
+  },
+  Pastel: {
+    name: 'Pastel',
+    colors: ['#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff'],
+  },
+  Spectrum: {
+    name: 'Spectrum',
+    colors: [
+      '#ef4444',
+      '#f59e0b',
+      '#10b981',
+      '#3b82f6',
+      '#8b5cf6',
+      '#ec4899',
+      '#14b8a6',
+    ],
+  },
+  Indigo: {
+    name: 'Indigo',
+    colors: ['#4338ca', '#6366f1', '#818cf8', '#a5b4fc'],
+  },
+  Corporate: {
+    name: 'Corporate',
+    colors: ['#0F62FE', '#393939'],
+  },
+} as const satisfies Record<string, Preset>;
+
+export const SHARED_PRESETS: readonly Preset[] = Object.values(COLOR_PRESETS);
+
 export function hexToRgb(hex: string): [number, number, number] {
   const value = hex.replace('#', '');
   const expanded =

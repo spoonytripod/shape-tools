@@ -1,29 +1,5 @@
 import { computeCanvas, RATIO_PRESETS } from '@/lib/shared/canvas';
-import { distributePalette, type Preset } from '@/lib/shared/color';
-
-export const ARROWS_PRESETS: readonly Preset[] = [
-  { name: 'Mono', colors: ['#1f2937'] },
-  {
-    name: 'Spectrum',
-    colors: [
-      '#ef4444',
-      '#f59e0b',
-      '#10b981',
-      '#3b82f6',
-      '#8b5cf6',
-      '#ec4899',
-      '#14b8a6',
-    ],
-  },
-  { name: 'Ocean', colors: ['#0F3460', '#16537e', '#3a86ff', '#8ecae6'] },
-  { name: 'Sunset', colors: ['#6a040f', '#dc2f02', '#f48c06', '#ffba08'] },
-  { name: 'Forest', colors: ['#1b4332', '#2d6a4f', '#52b788', '#95d5b2'] },
-  {
-    name: 'Pastel',
-    colors: ['#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff'],
-  },
-  { name: 'Corporate', colors: ['#0F62FE', '#393939'] },
-];
+import { COLOR_PRESETS, distributePalette } from '@/lib/shared/color';
 
 export type ArrowsState = {
   arrowCount: number;
@@ -42,7 +18,7 @@ export function defaultArrowsState(): ArrowsState {
     gapDeg: 10,
     headPercent: 20,
     direction: 'cw',
-    colors: distributePalette(ARROWS_PRESETS[1].colors, 3, '#1f2937'),
+    colors: distributePalette(COLOR_PRESETS.Spectrum.colors, 3, '#1f2937'),
     ratioIdx: 0,
   };
 }

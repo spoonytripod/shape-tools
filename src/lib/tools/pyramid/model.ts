@@ -1,23 +1,5 @@
 import { computeCanvas, RATIO_PRESETS } from '@/lib/shared/canvas';
-import { distributePalette, rgbToHex, type Preset } from '@/lib/shared/color';
-
-export const PYRAMID_PRESETS: readonly Preset[] = [
-  { name: 'Default', colors: ['#E8A33D', '#4D7CC7', '#3BAA9C'] },
-  { name: 'Ocean', colors: ['#8ecae6', '#3a86ff', '#16537e', '#0F3460'] },
-  {
-    name: 'Sunset',
-    colors: ['#ffba08', '#f48c06', '#dc2f02', '#9d0208', '#6a040f'],
-  },
-  { name: 'Forest', colors: ['#95d5b2', '#52b788', '#2d6a4f', '#1b4332'] },
-  {
-    name: 'Mono',
-    colors: ['#dee2e6', '#adb5bd', '#6c757d', '#495057', '#212529'],
-  },
-  {
-    name: 'Pastel',
-    colors: ['#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff'],
-  },
-];
+import { COLOR_PRESETS, distributePalette, rgbToHex } from '@/lib/shared/color';
 
 export type PyramidState = {
   layerCount: number;
@@ -30,7 +12,7 @@ export function defaultPyramidState(): PyramidState {
   return {
     layerCount: 3,
     layerGap: 8,
-    colors: distributePalette(PYRAMID_PRESETS[0].colors, 3, '#888888'),
+    colors: distributePalette(COLOR_PRESETS.Default.colors, 3, '#888888'),
     ratioIdx: 0,
   };
 }

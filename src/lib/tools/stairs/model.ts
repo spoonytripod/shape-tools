@@ -1,19 +1,10 @@
 import { computeCanvas, RATIO_PRESETS } from '@/lib/shared/canvas';
 import {
+  COLOR_PRESETS,
   distributePalette,
   hexToRgb,
   rgbToHex,
-  type Preset,
 } from '@/lib/shared/color';
-
-export const STAIRS_PRESETS: readonly Preset[] = [
-  { name: 'Default', colors: ['#4338ca', '#6366f1', '#818cf8', '#a5b4fc'] },
-  { name: 'Ocean', colors: ['#0F3460', '#16537e', '#3a86ff', '#8ecae6'] },
-  { name: 'Sunset', colors: ['#6a040f', '#dc2f02', '#f48c06', '#ffba08'] },
-  { name: 'Forest', colors: ['#1b4332', '#2d6a4f', '#52b788', '#95d5b2'] },
-  { name: 'Mono', colors: ['#212529', '#495057', '#6c757d', '#adb5bd'] },
-  { name: 'Growth', colors: ['#047857', '#10b981', '#34d399', '#6ee7b7'] },
-];
 
 export type StairsState = {
   stepCount: number;
@@ -26,7 +17,7 @@ export function defaultStairsState(): StairsState {
   return {
     stepCount: 4,
     stepHeight: 56,
-    colors: distributePalette(STAIRS_PRESETS[0].colors, 4, '#6366f1'),
+    colors: distributePalette(COLOR_PRESETS.Indigo.colors, 4, '#6366f1'),
     ratioIdx: 0,
   };
 }
