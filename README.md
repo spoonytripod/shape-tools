@@ -16,8 +16,12 @@ Asset Tools is a single-page web app that generates customizable graphics direct
 - Per-layer color picker plus curated palette presets
 - Soft inter-layer shadows for depth
 
+### 3D Stairs Generator
+- 2–8 steps with adjustable step height
+- Per-step color picker plus palette presets
+
 ### Circular Arrows Generator
-- 2–7 arrows arranged radially
+- 1–5 arrows arranged radially
 - Adjustable thickness, gap angle, head size
 - Clockwise / counter-clockwise direction toggle
 - Per-arrow color picker plus palette presets
@@ -58,6 +62,14 @@ Latest Chrome, Firefox, Safari, Edge. Requires CSS `aspect-ratio` and `min()` (i
 ├── legacy/          # original standalone tool versions, kept for reference
 └── .gitignore
 ```
+
+## Project documentation
+
+Asset Tools began as a way to create shapes for presentations and documents. The next phase will use Next.js, TypeScript, and shadcn/ui to add practical shapes and publish the site on Vercel.
+
+The tech stack and GitHub Pages link above describe the current implementation. The Next.js migration and Vercel deployment are planned, not implemented.
+
+See [the documentation index](docs/README.md) for goals, the migration plan, conventions, and decision records. Contributor guidance is in [AGENTS.md](AGENTS.md).
 
 ## License
 

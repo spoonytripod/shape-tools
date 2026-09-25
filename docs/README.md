@@ -1,0 +1,22 @@
+# 프로젝트 문서
+
+프로젝트 목적, 전환 계획, 개발 규약을 이 폴더에서 관리한다.
+
+## 읽는 순서
+
+1. [프로젝트 목표](project-goals.md): 대상 사용자와 제품 범위.
+2. [전환 계획](migration-plan.md): 현재 상태, 목표 구조, 단계별 완료 조건.
+3. [개발·문서 규약](conventions.md): 구현, 검증, 문서 관리 방법.
+4. [결정 기록](decisions/0001-project-direction.md): 최초 방향, [기술·배포 선택](decisions/0002-next-shadcn-vercel.md), [npm 선택](decisions/0003-package-manager.md), [품질 도구 선택](decisions/0004-quality-tooling.md), [URL 구조](decisions/0005-url-structure.md).
+
+## 현재 진행 상태
+
+- 완료: 프로젝트 방향, Next.js·shadcn/ui·Vercel, npm, 품질 도구, URL 구조 선택 문서화.
+- 미착수: Next.js 프로젝트 구성, 기존 도형 전환, 테스트 환경 구성.
+- 이후: 실용 도형 확장, 공개 웹사이트 사용성과 배포 개선.
+
+현재 실행 방법은 루트 [README.md](../README.md)를 따른다. 계획에 적힌 경로와 명령은 실제 구현되기 전까지 사용할 수 있다고 간주하지 않는다.
+
+## 문서별 책임
+
+목표는 `project-goals.md`, 작업 순서는 `migration-plan.md`, 공통 규약은 `conventions.md`를 기준으로 삼는다. 중요한 기술 선택은 `decisions/`에 기록한다. 같은 설명을 복사하기보다 기준 문서에 상대 링크를 건다.
